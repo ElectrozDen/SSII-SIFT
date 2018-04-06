@@ -4,12 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc-": "tsc",
+    "launch":"node app.js",
+    "start": "run-p tsc- launch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "opencv4nodejs": "^4.1.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.2"
   }
 }
