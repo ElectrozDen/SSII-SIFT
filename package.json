@@ -1,18 +1,20 @@
 {
-  "name": "SSII-SIFT",
+  "name": "SSII_SIFT",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc-": "tsc",
-    "launch":"node app.js",
-    "start": "run-p tsc- launch"
+    "launch": "node app.js",
+    "clear" : "rm *.js*",
+    "start": "npm run tsc- && npm run launch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ml-kmeans": "^3.0.0",
     "opencv4nodejs": "^4.1.0"
   },
   "devDependencies": {
