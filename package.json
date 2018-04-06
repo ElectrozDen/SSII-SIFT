@@ -5,16 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc-": "tsc",
+    "tsc": "tsc",
     "launch": "node ./bin/app.js",
-    "clear": "rm -r bin",
-    "start": "npm run tsc- && npm run launch"
+    "clear": "rm -r ./bin",
+    "start": "run-s tsc launch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@turf/clusters-kmeans": "^6.0.1",
+    "ml-kmeans": "^3.0.0",
     "opencv4nodejs": "^4.1.0"
   },
   "devDependencies": {

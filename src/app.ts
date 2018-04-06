@@ -42,8 +42,14 @@ images.map(im => im.drawWithKeypoints());
 const trainImg : ImageDescription[] = images.filter(isNotImageFour);
 const testImg : ImageDescription[] = images.filter(isImageFour);
 
+
+const siftD = new SIFTDetector();
+testImg.forEach(img=>img.keypoints = siftD.detect(img.image));
+
+
 console.log("testImages: "+testImg.map(id => id.name));
 console.log("trainImg: "+trainImg.map(id => id.name));
 
-
+//console.log("keypoints: "+testImg[0].keypoints.map(k=>k.angle));
+// useless ??
 
