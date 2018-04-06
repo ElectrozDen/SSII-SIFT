@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc-": "tsc",
+    "tsc": "tsc",
     "launch": "node ./bin/app.js",
-    "clear" : "rm *.js*",
-    "start": "npm run tsc- && npm run launch"
+    "clear": "rm *.js*",
+    "start": "run-s tsc launch"
   },
   "keywords": [],
   "author": "",
