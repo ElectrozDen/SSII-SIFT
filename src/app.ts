@@ -1,55 +1,54 @@
 import * as cv from 'opencv4nodejs';
 import * as path from 'path';
 import * as fs from 'fs';
-import { SIFTDetector, KeyPoint, Mat } from 'opencv4nodejs';
+import {KmeanReturn, kmeans} from './kmeans';
+import {ImageDescription} from './ImageDescription';
 
-class ImageDescription {
-    private static detector :SIFTDetector = new SIFTDetector();
-
-    name : string;
-    image : Mat;
-    label : number;
-    keypoints: KeyPoint[];
-    descriptors: Mat;
-    constructor(name: string, image: Mat){
-        this.name = name;
-        this.image = image;
-        this.label = -1;
-        this.keypoints = ImageDescription.detector.detect(this.image);
-        this.descriptors = ImageDescription.detector.compute(this.image, this.keypoints);
-    }
-
-    drawWithKeypoints() : void {
-        const im : Mat = cv.drawKeyPoints(this.image, this.keypoints);
-        cv.imwriteAsync("./bin/keyPoints_"+this.name, im);
-    }
-}
+fs.mkdir(path.resolve("./output"),(err) : void => {return});
 
 const dirPath : string = path.resolve('./images');
 const files : string [] = fs.readdirSync(dirPath);
 const isImageFour = (_, i : number) : boolean => files[i].match(/.*4.*/) != null;
 const isNotImageFour = (_, i) : boolean => !isImageFour(_, i);
 
+console.log("## generating images ##");
 const images : ImageDescription[] = files
     .map(file => path.resolve(dirPath,file))
     .map(filepath => cv.imread(filepath))
     .map(img => img.bgrToGray())
     .map((realImg, i) => new ImageDescription(files[i], realImg));
-images.map(im => console.log('name: '+im.name+' number of keypoints '+im.keypoints.length))
-images.map(im => im.drawWithKeypoints());
+console.log('## images generated ##');
+
+//images.map(im => console.log('name: '+im.name+' number of keypoints '+im.keypoints.length));
+console.log('## writing images ##');
+//images.map(im => im.drawWithKeypoints());
+console.log('## images successfully writen ##');
+
+//TODO Later
+// const trainImg : ImageDescription[] = images.filter(isNotImageFour);
+// const testImg : ImageDescription[] = images.filter(isImageFour);
+// console.log("testImages: "+testImg.map(id => id.name));
+// console.log("trainImg: "+trainImg.map(id => id.name));
+
+const dataK1 : any[] = new Array<any>();
+images.forEach(im => im.getdescriptors().forEach(d => dataK1.push(d)));
+
+console.log('## performing first kmeans ##');
+console.log('## 200 clusters and '+dataK1.length+' descriptors of '+dataK1[dataK1.length/2].length+' values ##');
+const clusters1 : KmeanReturn = kmeans(dataK1, 200);
+console.log('## first kmeans OK ##');
+console.log('## associating Bows to images ##');
+const labels1 : number[] = new Array<number>().concat(clusters1.idxs).reverse();
+images.forEach(im => im.obtainBows(labels1));
+console.log('## Bows OK ##');
 
 
-const trainImg : ImageDescription[] = images.filter(isNotImageFour);
-const testImg : ImageDescription[] = images.filter(isImageFour);
+const dataK2 : number[][] = new Array();
+images.forEach(im => dataK2.push(im.bows));
+console.log("## Performing second Kmeans ##");
+const clusters2 : KmeanReturn = kmeans(dataK2,2);
+const labels2 : number[] = new Array<number>().concat(clusters2.idxs).reverse();
+console.log('## second Kmeans OK ##');
 
-
-const siftD = new SIFTDetector();
-testImg.forEach(img=>img.keypoints = siftD.detect(img.image));
-
-
-console.log("testImages: "+testImg.map(id => id.name));
-console.log("trainImg: "+trainImg.map(id => id.name));
-
-//console.log("keypoints: "+testImg[0].keypoints.map(k=>k.angle));
-// useless ??
-
+images.forEach(im => im.obtainlabel(labels2));
+images.forEach(im => console.log(im.name+": "+im.label));

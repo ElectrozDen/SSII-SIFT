@@ -7,15 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "launch": "node ./bin/app.js",
-    "clear": "rm -r ./bin",
+    "clear": "rm -r ./bin ./output",
     "start": "run-s tsc launch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ml-kmeans": "^3.0.0",
-    "opencv4nodejs": "^4.1.0"
+    "opencv4nodejs": "^4.1.0",
+    "skmeans": "^0.9.7"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2"
