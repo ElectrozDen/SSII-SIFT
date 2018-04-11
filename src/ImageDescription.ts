@@ -1,5 +1,12 @@
 import { SIFTDetector, KeyPoint, Mat, drawKeyPoints, imwriteAsync} from 'opencv4nodejs';
 
+function isNotAllZero(array : number[]): boolean{
+    for (let i = 0; i < array.length; ++i){
+        if (array[i] != 0) return true;
+    }
+    return false;
+}
+
 /**
  * @author Corentin Artaud
  * 
@@ -9,6 +16,8 @@ export class ImageDescription {
      * a detector to rule them all
      */
     private static detector :SIFTDetector = new SIFTDetector();
+
+    private numberOfDescriptors: number;
 
     name : string;
     image : Mat;
@@ -33,25 +42,31 @@ export class ImageDescription {
         imwriteAsync("./output/keyPoints_"+this.name, im);
     }
 
+    drawDescriptors() : void {
+        imwriteAsync("./output/descriptors_"+this.name, this.descriptors);
+    }
+
     /**
      * @returns an array of descriptors as arrays of 128 numbers
      */
     getdescriptors() :number[][] {
         let res: number[][] = new Array<any>();
         this.descriptors.getDataAsArray().forEach(data => {
-            res.push(data);
+            if(isNotAllZero(data))
+                res.push(data);
         });
+        this.numberOfDescriptors = res.length;
         return res;
     }
 
     /**
      * @param labels of first Kmean in reverse order (to allow pop)
      */
-    obtainBows(labels: number[]) : void {
-        this.bows = new Array<number>(this.descriptors.rows);
+    obtainBows(labels: number[], k: number) : void {
+        this.bows = new Array<number>(k);
         this.bows.fill(0);
         for (let i = 0; i < this.bows.length; ++i) {
-            this.bows[i] = labels.pop();
+            ++this.bows[labels.pop()]
         }
     }
 

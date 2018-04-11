@@ -21,7 +21,7 @@ console.log('## images generated ##');
 
 //images.map(im => console.log('name: '+im.name+' number of keypoints '+im.keypoints.length));
 console.log('## writing images ##');
-//images.map(im => im.drawWithKeypoints());
+images.forEach(im => {im.drawWithKeypoints(); im.drawDescriptors();});
 console.log('## images successfully writen ##');
 
 //TODO Later
@@ -34,14 +34,14 @@ const dataK1 : any[] = new Array<any>();
 images.forEach(im => im.getdescriptors().forEach(d => dataK1.push(d)));
 
 console.log('## performing first kmeans ##');
-console.log('## 200 clusters and '+dataK1.length+' descriptors of '+dataK1[dataK1.length/2].length+' values ##');
-const clusters1 : KmeanReturn = kmeans(dataK1, 200);
+console.log('## 10 clusters and '+dataK1.length+' descriptors of '+dataK1[dataK1.length/2].length+' values ##');
+const clusters1 : KmeanReturn = kmeans(dataK1, 100);
 console.log('## first kmeans OK ##');
 console.log('## associating Bows to images ##');
 const labels1 : number[] = new Array<number>().concat(clusters1.idxs).reverse();
-images.forEach(im => im.obtainBows(labels1));
+images.forEach(im => im.obtainBows(labels1,100));
 console.log('## Bows OK ##');
-
+images.forEach(im => console.log(im.bows));
 
 const dataK2 : number[][] = new Array();
 images.forEach(im => dataK2.push(im.bows));
