@@ -2,3 +2,6 @@
 **node_modules/*
 .project
 **package_lock.json
+bin/
+.idea/
+node_modules/
