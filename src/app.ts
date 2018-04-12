@@ -3,6 +3,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {KmeanReturn, kmeans} from './kmeans';
 import {ImageDescription} from './ImageDescription';
+//import {KmeanReturn, kmeans} from './Kmeans/kmeansWrap';
+
 
 fs.mkdir(path.resolve("./output"),(err) : void => {return});
 
@@ -34,14 +36,15 @@ const dataK1 : any[] = new Array<any>();
 images.forEach(im => im.getdescriptors().forEach(d => dataK1.push(d)));
 
 console.log('## performing first kmeans ##');
-console.log('## 10 clusters and '+dataK1.length+' descriptors of '+dataK1[dataK1.length/2].length+' values ##');
-const clusters1 : KmeanReturn = kmeans(dataK1, 100);
+console.log('## 10 clusters and '+dataK1.length+' descriptors of '+dataK1[0].length+' values ##');
+const clusters1 : KmeanReturn = kmeans(dataK1, 10);
 console.log('## first kmeans OK ##');
+console.log('## '+clusters1.it+' iteration(s) ##')
 console.log('## associating Bows to images ##');
 const labels1 : number[] = new Array<number>().concat(clusters1.idxs).reverse();
-images.forEach(im => im.obtainBows(labels1,100));
+images.forEach(im => im.obtainBows(labels1,10));
 console.log('## Bows OK ##');
-images.forEach(im => console.log(im.bows));
+//images.forEach(im => console.log(im.bows));
 
 const dataK2 : number[][] = new Array();
 images.forEach(im => dataK2.push(im.bows));

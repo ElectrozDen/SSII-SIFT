@@ -8,5 +8,5 @@ export interface KmeanReturn {
 }
 
 export function kmeans(data: any[], nbCluster: number):KmeanReturn{
-    return skmeans(data, nbCluster, "kmpp");
+    return skmeans(data, nbCluster, "kmpp", 1000);
 }

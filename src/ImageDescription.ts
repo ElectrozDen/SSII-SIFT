@@ -65,7 +65,7 @@ export class ImageDescription {
     obtainBows(labels: number[], k: number) : void {
         this.bows = new Array<number>(k);
         this.bows.fill(0);
-        for (let i = 0; i < this.bows.length; ++i) {
+        for (let i = 0; i < this.descriptors.rows; ++i) {
             ++this.bows[labels.pop()]
         }
     }
